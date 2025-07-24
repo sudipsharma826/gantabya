@@ -1,5 +1,5 @@
 "use client";
-import { logIn, logOut } from "@/lib/authActions";
+import { logIn, logOut } from "@/lib/actions/authActions";
 import { Session } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,8 +12,8 @@ export default function NavBar({session}: {session: Session | null}) {
   const [isPending, startTransition] = useTransition();
   
   const navLinks = [
-    { href: "/", label: "My Trips" },
-    { href: "/about", label: "Gantabyas" },
+    { href: "/trips", label: "My Trips" },
+    { href: "/gantabyas", label: "Gantabyas" },
   ];
   return (
     <nav className="bg-white shadow-md py-6 border-b border-gray-200 ">
