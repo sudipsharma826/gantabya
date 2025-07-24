@@ -18,7 +18,7 @@ export default async function Trips(){
         <div className="space-y-6 container mx-auto px-4 py-8">
             <div>
                 <Link href={"/trips/create"}>
-                    <Button>New Trip</Button>
+                    <Button className="cursor-pointer">New Trip</Button>
                 </Link>
             </div>
         </div>
