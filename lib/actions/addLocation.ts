@@ -3,22 +3,33 @@
 import { auth } from "@/auth";
 import { prisma } from "../prisma";
 import { redirect } from "next/navigation";
-async function locationSuggestion(locationName: string) {
-};
 
-function geoLocation(locationName: string) {
-     const nominatimUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(locationName)}&format=json&addressdetails=1&limit=5`;
-     return fetch(nominatimUrl)
-         .then(response => response.json())
-         .then(data => {
-             if (data && data.length > 0) {
-                 const { lat, lon } = data[0];
-                 console.log("Location found:", lat, lon);
-                 return { lat, lng: lon };
-             }
-             throw new Error("Location not found");
-         });
+export async function locationSuggestion(locationName: string) {
+    if (!locationName || locationName.length < 3) {
+        return [];
+    }
+    
+    const nominatimUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(locationName)}&format=json&addressdetails=1&limit=5`;
+    
+    try {
+        const response = await fetch(nominatimUrl);
+        const data = await response.json();
+        
+        if (data && data.length > 0) {
+            return data.map((item: any) => ({
+                display_name: item.display_name,
+                lat: item.lat,
+                lon: item.lon,
+                place_id: item.place_id
+            }));
+        }
+        return [];
+    } catch (error) {
+        console.error("Error fetching location suggestions:", error);
+        return [];
+    }
 }
+
 export default async function addLocationAction(
     formData : FormData,
     tripId  : string
@@ -28,16 +39,17 @@ export default async function addLocationAction(
         throw new Error("Please login first");
     }
    const locationName = formData.get("locationName") as string;
+   const lat = formData.get("lat") as string;
+   const lng = formData.get("lng") as string;
+   
    if (!locationName) {
          throw new Error("Location name is required");
     }
     if (!tripId) {
           throw new Error("Trip ID is required");
-    } 
-    //with the user inputed address get the geo location
-    const {lat, lng} = await geoLocation(locationName);
+    }
     if (!lat || !lng) {
-        throw new Error("Invalid location coordinates");
+        throw new Error("Location coordinates are required");
     }
     //check if the location already exists
     const existingLocation = await prisma.location.findFirst({
@@ -65,7 +77,7 @@ export default async function addLocationAction(
             latitude: parseFloat(lat),
             longitude: parseFloat(lng),
             tripId: tripId,
-            order: count //as default the order is from 0 , so no count + 1
+            order: count
         }
     })
 
