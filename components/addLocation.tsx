@@ -73,9 +73,9 @@ export default function AddLocationPage({tripId}: { tripId: string }) {
     };
 
     return (
-        <div className="min-h-calc(100vh - 64px) flex items-center justify-center mt-10">
-            <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
-                <div className="text-center mb-6">
+        <div className="min-h-calc(100vh - 64px) flex items-center justify-center mt-10 backdrop-blur-sm">
+            <div className="w-full max-w-md p-6 rounded-lg shadow-md backdrop-blur-sm">
+                <div className="text-center mb-6 backdrop-blur-sm">
                     <h1 className="text-2xl font-bold mb-2">Add New Location</h1>
                     <p className="text-gray-600">Add a new location to your trip</p>
 

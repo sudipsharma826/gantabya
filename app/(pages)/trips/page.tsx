@@ -20,7 +20,7 @@ export default async function Trips(){
     const trips = await prisma.trip.findMany({
         where:{
             userId: session.user.id
-        }
+        },
     });
     
     const sortedTrips = [...trips].sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime()); //Trips in descending order by start date

@@ -17,20 +17,24 @@ export default async function TripDetail({
             </div>
         );
     }
-    //get trip details
+    //get trip details with locations
     const tripDetails = await prisma.trip.findFirst({
         where: {
             id: tripId,
             userId: session.user.id,
         },
         include:{
-            locations:true,
+            locations: {
+                orderBy: {
+                    order: 'asc'
+                }
+            },
         }
     });
     if (!tripDetails) {
         return redirect("/trips");
     }
     return (
-        <TripDetails tripDetails={tripDetails} />
+        <TripDetails tripDetails={tripDetails} session={session} />
     );
 }
